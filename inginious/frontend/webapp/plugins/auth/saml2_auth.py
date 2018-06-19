@@ -63,6 +63,7 @@ def prepare_request():
 
     # If server is behind proxys or balancers use the HTTP_X_FORWARDED fields
     data = web.input()
+    logging.getLogger('inginious.webapp.plugin.auth.saml').debug(web.ctx)
     return {
         'https': 'on' if web.ctx.protocol == 'https' else 'off',
         'http_host': web.ctx.environ["SERVER_NAME"],
