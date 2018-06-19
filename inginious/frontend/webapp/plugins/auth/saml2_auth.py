@@ -100,6 +100,7 @@ class SAMLPage(INGIniousPage):
         auth.process_response()
         errors = auth.get_errors()
 
+        logging.getLogger('inginious.webapp.plugin.auth.saml').debug(auth.get_last_error_reason())
         # Try and check if IdP is using several signature certificates
         # This is a limitation of python3-saml
         for cert in settings["idp"].get("additionalX509certs", []):
