@@ -68,10 +68,11 @@ def prepare_request():
     print("LOGGINGGGG!!!!")
     logging.getLogger('inginious.webapp.plugin.auth.saml').error(web.ctx)
     print(web.ctx)
+    web.ctx.protocol = "https"
     return {
         'https': 'on' if web.ctx.protocol == 'https' else 'off',
-        'http_host': web.ctx.environ["HTTP_ORIGIN"],
-        'server_port': web.ctx.environ["SERVER_PORT"],
+        'http_host': web.ctx.environ["HTTP_X_FORWARDED_HOST"],
+        'server_port': "443",
         'script_name': web.ctx.homepath,
         'get_data': data.copy(),
         'post_data': data.copy(),
