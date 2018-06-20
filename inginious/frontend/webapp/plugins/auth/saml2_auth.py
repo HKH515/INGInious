@@ -100,9 +100,9 @@ class SAMLPage(INGIniousPage):
         req = prepare_request()
         input_data = web.input()
 
-        auth = OneLogin_Saml2_Auth(req, settings)
-        auth.process_response()
-        errors = auth.get_errors()
+        #auth = OneLogin_Saml2_Auth(req, settings)
+        #auth.process_response()
+        #errors = auth.get_errors()
 
         logging.getLogger('inginious.webapp.plugin.auth.saml').error("NOW LOGGING")
         print("NOW LOGGING")
