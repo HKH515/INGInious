@@ -63,7 +63,10 @@ def prepare_request():
 
     # If server is behind proxys or balancers use the HTTP_X_FORWARDED fields
     data = web.input()
+    logging.getLogger('inginious.webapp.plugin.auth.saml').error("LOGGINGGGG!!!!")
+    print("LOGGINGGGG!!!!")
     logging.getLogger('inginious.webapp.plugin.auth.saml').error(web.ctx)
+    print(web.ctx)
     return {
         'https': 'on' if web.ctx.protocol == 'https' else 'off',
         'http_host': web.ctx.environ["SERVER_NAME"],
@@ -101,7 +104,10 @@ class SAMLPage(INGIniousPage):
         auth.process_response()
         errors = auth.get_errors()
 
+        logging.getLogger('inginious.webapp.plugin.auth.saml').error("NOW LOGGING")
+        print("NOW LOGGING")
         logging.getLogger('inginious.webapp.plugin.auth.saml').error(auth.get_last_error_reason())
+        print(auth.get_last_error_reason())
         # Try and check if IdP is using several signature certificates
         # This is a limitation of python3-saml
         for cert in settings["idp"].get("additionalX509certs", []):
