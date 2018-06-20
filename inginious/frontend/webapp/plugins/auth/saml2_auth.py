@@ -70,7 +70,7 @@ def prepare_request():
     return {
         'https': 'on' if web.ctx.protocol == 'https' else 'off',
         'http_host': web.ctx.environ["HTTP_X_FORWARDED_HOST"],
-        'server_port': web.ctx.environ["443"],
+        'server_port': "443",
         'script_name': web.ctx.homepath,
         'get_data': data.copy(),
         'post_data': data.copy(),
