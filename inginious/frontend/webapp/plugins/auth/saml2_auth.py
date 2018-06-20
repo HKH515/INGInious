@@ -57,7 +57,8 @@ def prepare_request():
 
     # Set the ACS url and binding method
     settings["sp"]["assertionConsumerService"] = {
-        "url": web.ctx.homedomain + web.ctx.homepath + "/SAML/ACS",
+        #"url": web.ctx.homedomain + web.ctx.homepath + "/SAML/ACS",
+        "url": "https://ing.ru.is/SAML/ACS",
         "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
     }
 
@@ -69,8 +70,8 @@ def prepare_request():
     print(web.ctx)
     return {
         'https': 'on' if web.ctx.protocol == 'https' else 'off',
-        'http_host': web.ctx.environ["HTTP_X_FORWARDED_HOST"],
-        'server_port': "443",
+        'http_host': web.ctx.environ["HTTP_ORIGIN"],
+        'server_port': web.ctx.environ["SERVER_PORT"],
         'script_name': web.ctx.homepath,
         'get_data': data.copy(),
         'post_data': data.copy(),
