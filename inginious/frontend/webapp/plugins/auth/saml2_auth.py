@@ -68,8 +68,8 @@ def prepare_request():
     print("LOGGINGGGG!!!!")
     #logging.getLogger('inginious.webapp.plugin.auth.saml').error(web.ctx)
     #print(web.ctx)
-    print("HTTP_ORIGIN: %s" % web.ctx.environ["HTTP_ORIGIN"])
-    print("SERVER_PORT: %s" % web.ctx.environ["SERVER_PORT"])
+    logging.getLogger('inginious.webapp.plugin.auth.saml').debug("HTTP_ORIGIN: %s" % web.ctx.environ["HTTP_ORIGIN"])
+    logging.getLogger('inginious.webapp.plugin.auth.saml').debug("SERVER_PORT: %s" % web.ctx.environ["SERVER_PORT"])
     return {
         'https': 'on' if web.ctx.protocol == 'https' else 'off',
         'http_host': web.ctx.environ["HTTP_ORIGIN"],
