@@ -73,7 +73,7 @@ def prepare_request():
     logging.getLogger('inginious.webapp.plugin.auth.saml').debug(web.ctx.homepath)
     return {
         'https': 'on',
-        'http_host': "ing.ru.is/SAML/ACS",
+        'http_host': web.ctx.environ["HTTP_X_FORWARDED_FOR"],
         'server_port': "443",
         'script_name': web.ctx.homepath,
         'get_data': data.copy(),
