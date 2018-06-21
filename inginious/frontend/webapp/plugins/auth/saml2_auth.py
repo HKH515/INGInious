@@ -70,6 +70,7 @@ def prepare_request():
     #print(web.ctx)
     logging.getLogger('inginious.webapp.plugin.auth.saml').debug("HTTP_ORIGIN: %s" % web.ctx.environ["HTTP_ORIGIN"])
     logging.getLogger('inginious.webapp.plugin.auth.saml').debug("SERVER_PORT: %s" % web.ctx.environ["SERVER_PORT"])
+    logging.getLogger('inginious.webapp.plugin.auth.saml').debug(web.ctx.homepath)
     return {
         'https': 'on',
         'http_host': "ing.ru.is/SAML/ACS",
@@ -143,7 +144,6 @@ class SAMLPage(INGIniousPage):
         else:
             logging.getLogger('inginious.webapp.plugin.auth.saml').error("Errors while processing response : " + ", ".join(errors))
             raise web.seeother("/")
-        raise web.seeother("/")
 
 def init(plugin_manager, course_factory, client, conf):
     global settings
