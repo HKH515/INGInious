@@ -73,7 +73,7 @@ def prepare_request():
     return {
         'https': 'on',
         'http_host': "ing.ru.is/SAML/ACS",
-        'server_port': "80",
+        'server_port': "443",
         'script_name': web.ctx.homepath,
         'get_data': data.copy(),
         'post_data': data.copy(),
