@@ -143,7 +143,7 @@ class SAMLPage(INGIniousPage):
         else:
             logging.getLogger('inginious.webapp.plugin.auth.saml').error("Errors while processing response : " + ", ".join(errors))
             raise web.seeother("/")
-
+    raise web.seeother("/")
 
 def init(plugin_manager, course_factory, client, conf):
     global settings
