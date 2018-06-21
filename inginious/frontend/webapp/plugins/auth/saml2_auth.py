@@ -8,7 +8,7 @@
 import web
 import logging
 import copy
-
+import pprint
 from inginious.frontend.webapp.pages.utils import INGIniousPage
 from inginious.frontend.webapp.user_manager import AuthMethod
 from onelogin.saml2.auth import OneLogin_Saml2_Auth
@@ -70,10 +70,10 @@ def prepare_request():
     #print(web.ctx)
     logging.getLogger('inginious.webapp.plugin.auth.saml').debug("HTTP_ORIGIN: %s" % web.ctx.environ["HTTP_ORIGIN"])
     logging.getLogger('inginious.webapp.plugin.auth.saml').debug("SERVER_PORT: %s" % web.ctx.environ["SERVER_PORT"])
-    logging.getLogger('inginious.webapp.plugin.auth.saml').debug(web.ctx.homepath)
+    logging.getLogger('inginious.webapp.plugin.auth.saml').debug(pprint.pprint(web.ctx.environ))
     return {
         'https': 'on',
-        'http_host': web.ctx.environ["HTTP_X_FORWARDED_FOR"],
+        'http_host': "https://ing.ru.is",
         'server_port': "443",
         'script_name': web.ctx.homepath,
         'get_data': data.copy(),
