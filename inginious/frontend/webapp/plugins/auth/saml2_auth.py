@@ -64,16 +64,10 @@ def prepare_request():
 
     # If server is behind proxys or balancers use the HTTP_X_FORWARDED fields
     data = web.input()
-    logging.getLogger('inginious.webapp.plugin.auth.saml').error("LOGGINGGGG!!!!")
-    print("LOGGINGGGG!!!!")
-    #logging.getLogger('inginious.webapp.plugin.auth.saml').error(web.ctx)
-    #print(web.ctx)
-    logging.getLogger('inginious.webapp.plugin.auth.saml').debug("HTTP_ORIGIN: %s" % web.ctx.environ["HTTP_ORIGIN"])
-    logging.getLogger('inginious.webapp.plugin.auth.saml').debug("SERVER_PORT: %s" % web.ctx.environ["SERVER_PORT"])
-    logging.getLogger('inginious.webapp.plugin.auth.saml').debug(web.ctx.environ)
     return {
         'https': 'on',
-        'http_host': "ing.ru.is",
+        # We had to improvise here, INGInious was not getting authenticated, so we had to hardcode this
+        'http_host': web.ctx.environ["SERVER_NAME"],
         'server_port': "443",
         'script_name': web.ctx.homepath,
         'get_data': data.copy(),
