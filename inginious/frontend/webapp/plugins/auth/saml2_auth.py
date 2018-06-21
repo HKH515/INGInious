@@ -58,8 +58,8 @@ def prepare_request():
     # Set the ACS url and binding method
     settings["sp"]["assertionConsumerService"] = {
         #"url": web.ctx.homedomain + web.ctx.homepath + "/SAML/ACS",
-        "url": "https://ing.ru.is/",
-        "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+        "url": "https://ing.ru.is/SAML/ACS",
+        "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
     }
 
     # If server is behind proxys or balancers use the HTTP_X_FORWARDED fields
