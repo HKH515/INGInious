@@ -58,7 +58,7 @@ def prepare_request():
     # Set the ACS url and binding method
     settings["sp"]["assertionConsumerService"] = {
         #"url": web.ctx.homedomain + web.ctx.homepath + "/SAML/ACS",
-        "url": "https://ing.ru.is/SAML/ACS",
+        "url": "https://ing.ru.is/",
         "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
     }
 
