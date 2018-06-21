@@ -67,7 +67,7 @@ def prepare_request():
     return {
         'https': 'on',
         # We had to improvise here, INGInious was not getting authenticated, so we had to hardcode this
-        'http_host': web.ctx.environ["SERVER_NAME"],
+        'http_host': "ing.ru.is",
         'server_port': "443",
         'script_name': web.ctx.homepath,
         'get_data': data.copy(),
