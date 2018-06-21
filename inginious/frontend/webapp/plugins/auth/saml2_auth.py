@@ -72,7 +72,7 @@ def prepare_request():
     logging.getLogger('inginious.webapp.plugin.auth.saml').debug("SERVER_PORT: %s" % web.ctx.environ["SERVER_PORT"])
     return {
         'https': 'on' if web.ctx.protocol == 'https' else 'off',
-        'http_host': "ing.ru.is,
+        'http_host': "ing.ru.is",
         'server_port': "80",
         'script_name': web.ctx.homepath,
         'get_data': data.copy(),
