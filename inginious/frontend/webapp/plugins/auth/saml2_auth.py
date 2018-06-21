@@ -78,7 +78,7 @@ def prepare_request():
         'get_data': data.copy(),
         'post_data': data.copy(),
         # Uncomment if using ADFS as IdP, https://github.com/onelogin/python-saml/pull/144
-        # 'lowercase_urlencoding': True,
+        'lowercase_urlencoding': True,
         'query_string': web.ctx.query
     }
 
