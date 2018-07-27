@@ -11,6 +11,7 @@ class CanvasGrader(INGIniousAdminPage):
 
     def GET_AUTH(self, courseid, taskid):
         course, task = self.get_course_and_check_rights(courseid, taskid)
+        print("course: %s, task: %s" % (course, task))
         return self.page(course, task, [])
 
     def POST_AUTH(self, courseid, taskid):
