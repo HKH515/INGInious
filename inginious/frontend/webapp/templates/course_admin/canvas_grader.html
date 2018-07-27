@@ -1,0 +1,322 @@
+$def with (course,task,student_data,using_groups,premade_comments,errors)
+
+$#
+$# This file is part of INGInious. See the LICENSE and the COPYRIGHTS files for
+$# more information about the licensing of this file.
+$#
+
+$var title: $:course.get_name()
+
+$var Column: $:template_helper.call('course_admin_menu',course=course,current='tasks')
+$ is_admin = user_manager.has_admin_rights_on_course(course)
+
+$code:
+    student_data_len = len(student_data)
+    filter_list_len = min(student_data_len, 10)
+
+$def NavbarF():
+    <ol class="nav navbar-nav nav-breadcrumb">
+        <li><a href="$get_homepath()/course/$course.get_id()">$course.get_name()</a></li>
+        <li><a href="$get_homepath()/admin/$course.get_id()" title="Administration" data-toggle="tooltip" data-placement="bottom">
+            <i class="fa fa-user-secret"></i></a></li>
+        <li class="active"><a href="#"><i class="fa fa-tasks"></i> Tasks <span class="sr-only">(current)</span></a></li>
+    </ol>
+$var Navbar: $:NavbarF()
+
+<form method="post">
+<h2>Canvas Grader - $:course.get_name()
+
+</h2>
+
+<div>
+This tool allows you to submit grades from INGInious to Canvas. Data you enter here will not persist on INGInious. When you submit, the Canvas API will be invoked and the entries you have made will be transmitted to Canvas. Any comments you make will be appended to the existing comments.<br /><br />
+</div>
+
+$if len(errors) != 0:
+    <h3>Errors while submitting grades</h3>
+    <table class="table">
+        $for error in errors:
+            <tr>
+                <td>$error</td>
+            </tr>
+    </table>
+
+<div class="row">
+    <div class="col-sm-3">
+        <input class="form-control" type="text" name="canvas_api_key" id="canvas_api_key" placeholder="Canvas API Key" />
+    </div>
+
+    <div class="col-sm-3">
+        <input class="form-control" type="text" name="canvas_course_id" id="canvas_course_id" placeholder="Canvas Course ID" />
+    </div>
+
+    <div class="col-sm-3">
+        <input class="form-control" type="text" name="canvas_assignment_id" id="canvas_assignment_id" placeholder="Canvas Assignment ID" />
+    </div>
+
+    <div class="col-sm-3">
+        <button type="submit" class="btn btn-info btn-large btn-block">Submit To Canvas</button>
+    </div>
+</div>
+
+<div class="row" style="padding-top: 10px;">
+
+    <div class="col-sm-3">
+        <button type="button" onclick="round_up_to_100();" class="btn-sm btn btn-default" style="width: 100%;"><i class="fa fa-calculator "></i>Round Up To 100%</button>
+    </div>
+
+    <div class="col-sm-3">
+        <button type="button" onclick="round_to_10();" class="btn-sm btn btn-default" style="width: 100%;"><i class="fa fa-calculator"></i>Round To Nearest 10%</button>
+    </div>
+</div>
+
+<div class="row" style="padding-top: 10px; padding-bottom: 10px;">
+
+    <div class="col-sm-3">
+        <select id="grade_entries_xth_entry">
+            <option value="-1">-- Show every x-th entry</option>
+            $for i in range(2, filter_list_len+1)
+                <option value="$i">$i</option>
+        </select>
+    </div>
+
+    <div class="col-sm-3">
+        <select id="grade_entries_offset">
+            <option value="0">-- Offset</option>
+            $for i in range(0, filter_list_len)
+                <option value="$i">$i</option>
+        </select>
+    </div>
+
+</div>
+
+<table class="table sorted_table">
+    <thead>
+        $if using_groups:
+            <tr>
+                <th></th>
+                <th><input type="checkbox" value="1" id="select_all_checkbox" onclick="toggle_checkboxes();"></th>
+                <th>groups</th>
+                <th>submission</th>
+                <th>inginious grade</th>
+                <th>grade for canvas</th>
+                <th>comments</th>
+            </tr>
+        $else:
+            <tr>
+                <th></th>
+                <th><input type="checkbox" value="1" id="select_all_checkbox" onclick="toggle_checkboxes();"></th>
+                <th>student username</th>
+                <th>submission</th>
+                <th>inginious grade</th>
+                <th>grade for canvas</th>
+                <th>comments</th>
+            </tr>
+    </thead>
+    <tbody id="grade_entries">
+        $ tabindex = 0
+        $if using_groups:
+            
+            $for group in student_data:
+                $ group_id = ""
+                $for user in group:
+                    $ group_id = group_id + user["username"]
+
+                    $if not loop.last:
+                        $ group_id = group_id + ","
+
+                $ first_user = group[0]
+                <tr
+                $if first_user["status"] == "notattempted":
+                    class="warning"
+                $elif first_user["status"] == "succeeded":
+                    class="success"
+                $elif first_user["status"] == "failed":
+                    class="danger"
+                >
+                <td>${tabindex + 1}</td>
+                <td>
+                    <input type="checkbox" value="1" name="user_$group_id" tabindex="${tabindex * 3 + 1}" />
+                </td>
+                <td>
+                    $for user in group:
+                        $if user["realname"] != "":
+                            <a href="$get_homepath()/admin/${course.get_id()}/student/$user['username']">$user["realname"]</a>
+                        $else:
+                            <a href="$get_homepath()/admin/${course.get_id()}/student/$user['username']">$user["username"]</a>
+
+                        $if not loop.last:
+                            <br />
+
+                </td>
+                <td>
+                    <a target="submission" href="/admin/${course.get_id()}/student/${first_user["username"]}/${task.get_id()}/${first_user["submissionid"]}">submission</a>
+                </td>
+                <td>
+                    $if first_user["status"] == "notviewed":
+                        Not viewed
+                    $elif first_user["status"] == "notattempted":
+                        Not attempted (viewed)
+                    $elif first_user["status"] == "succeeded":
+                        Succeeded ($first_user["grade"]%)
+                    $else:
+                        Failed ($first_user["grade"]%)
+                </td>
+                <td>
+                    <input class="canvas_grade" type="text" size="3" value="$first_user["grade"]" name="canvas_grade_$group_id" tabindex="${tabindex * 3 + 2}"/>%
+                </td>
+                <td>
+                    <textarea rows="3" cols="40" name="canvas_comments_$group_id" tabindex="${tabindex * 3 + 3}"></textarea>
+                    $for comment in premade_comments:
+                        $if loop.first:
+                            <br />
+                        <a href="#" onclick="populate_comment($loop.index0, '$group_id'); return false;">$comment[0]</a>&nbsp;
+                </td>
+
+                </tr>
+
+                $ tabindex = tabindex + 1
+
+
+        $else:
+            $for user in student_data:
+                <tr
+                $if user["status"] == "notattempted":
+                    class="warning"
+                $elif user["status"] == "succeeded":
+                    class="success"
+                $elif user["status"] == "failed":
+                    class="danger"
+                >
+                <td>${tabindex + 1}</td>
+                <td>
+                    <input type="checkbox" value="1" name="user_$user["username"]" tabindex="${tabindex * 3 + 1}" />
+                </td>
+                <td>
+                    $if user["realname"] != "":
+                        <a href="$get_homepath()/admin/${course.get_id()}/student/$user['username']">$user["realname"]</a>
+                    $else:
+                        <a href="$get_homepath()/admin/${course.get_id()}/student/$user['username']">$user["username"]</a>
+                </td>
+                <td>
+                    <a target="submission" href="/admin/${course.get_id()}/student/${user["username"]}/${task.get_id()}/${user["submissionid"]}">submission</a>
+                </td>
+                <td>
+                    $if user["status"] == "notviewed":
+                        Not viewed
+                    $elif user["status"] == "notattempted":
+                        Not attempted (viewed)
+                    $elif user["status"] == "succeeded":
+                        Succeeded ($user["grade"]%)
+                    $else:
+                        Failed ($user["grade"]%)
+                </td>
+                <td>
+                    <input class="canvas_grade" type="text" size="3" value="$user["grade"]" name="canvas_grade_$user["username"]" tabindex="${tabindex * 3 + 2}"/>%
+                </td>
+                <td>
+                    <textarea rows="3" cols="40" name="canvas_comments_$user["username"]" tabindex="${tabindex * 3 + 3}"></textarea>
+                    $for comment in premade_comments:
+                        $if loop.first:
+                            <br />
+                        <a href="#" onclick="populate_comment($loop.index0, '$user["username"]'); return false;">$comment[0]</a>&nbsp;
+                </td>
+                </tr>
+                $ tabindex = tabindex + 1
+
+    </tbody>
+</table>
+</form>
+
+<script type="text/javascript">
+$$('.sorted_table').sortable({
+    containerSelector: 'table',
+    itemPath: '> tbody',
+    itemSelector: 'tr',
+    placeholder: '<tr class="placeholder"/>'
+});
+
+$$('.sorted_table').sortable("disable");
+
+$$("#switch").click(function  (e) {
+    if($$(this).hasClass("active")) {
+        $$(this).removeClass("active");
+        $$(".sorted_table tr").removeAttr("style");
+    } else {
+        $$(this).addClass("active");
+        $$(".sorted_table tr").attr("style", "cursor: pointer;");
+    }
+    $$('.sorted_table').sortable($$(this).hasClass("active") ? "enable" : "disable");
+});
+
+function toggle_checkboxes() {
+
+    select_all = $$("#select_all_checkbox").prop("checked")
+
+    if(select_all) {
+        $$(":checkbox").prop("checked", true);
+    } else {
+        $$(":checkbox").prop("checked", false);
+    }
+}
+
+function round_to_10() {
+    $$(".canvas_grade").each(function(index) {
+        new_val = Math.round(parseFloat($$(this).val()) / 10) * 10;
+        $$(this).val(new_val);
+    });
+}
+
+function round_up_to_100() {
+    $$(".canvas_grade").each(function(index) {
+        if(parseFloat($$(this).val()) > 0) {
+            $$(this).val("100.0");
+        }
+    });
+}
+
+function update_list() {
+
+    x = parseInt($$("#grade_entries_xth_entry").find(":selected").val());
+    offset = parseInt($$("#grade_entries_offset").find(":selected").val());
+
+    if(x == -1) {
+        $$("#grade_entries tr").show();
+        return;
+    }
+
+    counter = 0;
+    $$("#grade_entries tr").each(function(index) {
+        
+
+        if(index < offset) {
+            $$(this).hide();
+            return;
+        }
+
+        if(counter % x == 0) {
+            $$(this).show();
+        } else {
+            $$(this).hide();
+        }
+
+        counter += 1;
+    });
+}
+
+$$("#grade_entries_xth_entry").change(update_list);
+$$("#grade_entries_offset").change(update_list);
+
+var j_premade_comments = [];
+$for comment in premade_comments:
+    j_premade_comments.push('$comment[1]');
+
+function populate_comment(comment_index, name) {
+    $$("textarea[name*='"+name+"']").each(function(index) {
+        if($$(this).val()[$$(this).val().length - 1] != "\n" && $$(this).val() != "") {
+            $$(this).val($$(this).val() + "\n");
+        }
+        $$(this).val($$(this).val() + j_premade_comments[comment_index]);
+    });
+}
+</script>

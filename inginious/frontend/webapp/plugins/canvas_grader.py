@@ -170,6 +170,7 @@ def init(plugin_manager, _course_factory, client, plugin_config):
     global course_factory
     settings = plugin_config
     course_factory = _course_factory
-    canvas_grader_pattern = '/admin/canvas_grader/([^/]+)/([^/]+)'
+    canvas_grader_pattern = config.get("page_pattern", "external")
+    #canvas_grader_pattern = r'/admin/canvas_grader/([^/]+)/([^/]+)'
     #canvas_grader_pattern = r'/admin/canvas_grader/'
     plugin_manager.add_page(canvas_grader_pattern, CanvasGrader)
