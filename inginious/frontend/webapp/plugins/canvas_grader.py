@@ -131,6 +131,8 @@ class CanvasGrader(INGIniousAdminPage):
 
         student_data = individual_data.values()
 
+        print("student_data: %s" % student_data)
+
         if using_groups:
             course_agg = self.database.aggregations.find_one({"courseid": course.get_id()})
             if "groups" in course_agg.keys():
