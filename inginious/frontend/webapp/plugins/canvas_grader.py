@@ -71,8 +71,8 @@ class CanvasGrader(INGIniousAdminPage):
                     users_page = r.json()
                     if len(users_page) == 0:
                         break
-                    print("printing users_page")
-                    print(users_page)
+                    #print("printing users_page")
+                    #print(users_page)
                     users += [{"id": x["user"]["id"], "login_id": x["user"]["sis_user_id"]} for x in users_page]
                     page += 1
 
