@@ -18,6 +18,7 @@ class CanvasGrader(INGIniousAdminPage):
         global settings
         course, task = self.get_course_and_check_rights(courseid, taskid)
         post_data = web.input()
+        print("post_data: %s" % post_data)
         users = self.get_users_from_canvas(post_data.canvas_api_key, post_data.canvas_course_id)
         errors = []
 
@@ -72,7 +73,7 @@ class CanvasGrader(INGIniousAdminPage):
                         break
                     print("printing users_page")
                     print(users_page)
-                    users += [{"id": x["user"]["id"], "login_id": x["user"]["login_id"]} for x in users_page]
+                    users += [{"id": x["user"]["id"], "login_id": x["user"]["sis_user_id"]} for x in users_page]
                     page += 1
 
                 except ValueError as e:
