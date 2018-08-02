@@ -122,6 +122,9 @@ class SAMLPage(INGIniousPage):
         if len(errors) == 0 and "attributes" in settings:
             attrs = auth.get_attributes()
 
+            logging.getLogger('inginious.webapp.plugin.auth.saml').error('attrs: %s' % attrs)
+
+
             username = attrs[settings["attributes"]["uid"]][0]
             realname = attrs[settings["attributes"]["cn"]][0]
             email = attrs[settings["attributes"]["email"]][0]
