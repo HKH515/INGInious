@@ -165,6 +165,7 @@ class CanvasGrader(INGIniousAdminPage):
                 for i in settings["course_comments"][course.get_id()]:
                     comments.append([i, settings["course_comments"][course.get_id()][i]])
 
+        logging.getLogger('inginious.webapp.plugin.canvas_grader').error("student_data: %s" % student_data)
         return self.template_helper.get_renderer().course_admin.canvas_grader(course, task, student_data, using_groups, comments, errors)
 
 def init(plugin_manager, _course_factory, client, plugin_config):

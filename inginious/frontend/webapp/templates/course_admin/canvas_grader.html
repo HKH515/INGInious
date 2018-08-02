@@ -120,7 +120,6 @@ $if len(errors) != 0:
             $for group in student_data:
                 $ group_id = ""
                 $for user in group:
-                    $print("debug: user: %s" % user)
                     $ group_id = group_id + user["username"]
 
                     $if not loop.last:
