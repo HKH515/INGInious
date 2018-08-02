@@ -203,7 +203,7 @@ class UserManager(AbstractUserManager):
         for method in self._auth_methods:
             if method.should_cache() is False:
                 infos = method.get_users_info(remaining_users)
-                logging._logger.error('infos: %s' % infos)
+                self._logger.error('infos: %s' % infos)
                 if infos is not None:
                     for user, val in infos.items():
                         retval[user] = val
