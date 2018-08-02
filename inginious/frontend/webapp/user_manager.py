@@ -203,6 +203,7 @@ class UserManager(AbstractUserManager):
         for method in self._auth_methods:
             if method.should_cache() is False:
                 infos = method.get_users_info(remaining_users)
+                logging._logger.error('infos: %s' % infos)
                 if infos is not None:
                     for user, val in infos.items():
                         retval[user] = val
@@ -223,7 +224,7 @@ class UserManager(AbstractUserManager):
         # If it's still not the case, ask the other auth methods
         for method in self._auth_methods:
             if method.should_cache() is True:
-                infos = method.get_users_info(remaining_users)
+                infos = method.get_users_info(remaining_usersi)
                 if infos is not None:
                     for user, val in infos.items():
                         if val is not None:
