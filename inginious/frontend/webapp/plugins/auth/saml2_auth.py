@@ -119,6 +119,8 @@ class SAMLPage(INGIniousPage):
                 auth.process_response()
                 errors = auth.get_errors()
 
+        logging.getLogger('inginious.webapp.plugin.auth.saml').error('len(errors): %s' % len(errors))
+        logging.getLogger('inginious.webapp.plugin.auth.saml').error('attributes in settings: %s' % ("attributes" in settings))
         if len(errors) == 0 and "attributes" in settings:
             attrs = auth.get_attributes()
 
