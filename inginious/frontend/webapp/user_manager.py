@@ -224,7 +224,7 @@ class UserManager(AbstractUserManager):
         # If it's still not the case, ask the other auth methods
         for method in self._auth_methods:
             if method.should_cache() is True:
-                infos = method.get_users_info(remaining_usersi)
+                infos = method.get_users_info(remaining_users)
                 if infos is not None:
                     for user, val in infos.items():
                         if val is not None:
