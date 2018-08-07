@@ -73,7 +73,7 @@ class CanvasGrader(INGIniousAdminPage):
                         break
                     #print("printing users_page")
                     #print(users_page)
-                    users += [{"id": x["user"]["id"], "login_id": x["user"]["sis_user_id"]} for x in users_page]
+                    users += [{"id": x["user"]["id"], "login_id": x["user"]["login_id"]} for x in users_page]
                     page += 1
 
                 except ValueError as e:
