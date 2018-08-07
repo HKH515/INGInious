@@ -93,7 +93,7 @@ class CanvasGrader(INGIniousAdminPage):
 
         # Currently we rely on the idea that we can strip out a piece of the email to get the username
         for user in canvas_users:
-
+            logging.getLogger('inginious.webapp.plugin.canvas_grader').error(user)
             if user["login_id"].replace(settings["username_strip"], "") == username:
                 user_id = user["id"]
                 break
