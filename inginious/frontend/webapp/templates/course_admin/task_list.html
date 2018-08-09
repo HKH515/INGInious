@@ -70,6 +70,9 @@ $var Navbar: $:NavbarF()
                     $if is_admin:
                         <a href="$get_homepath()/admin/${course.get_id()}/replay$data[taskid]['url']" class="btn btn-default btn-xs" title="Replay submissions"
                            data-toggle="tooltip" data-placement="bottom"><i class="fa fa-refresh"></i></a>
+                    
+                    <a href="$get_homepath()/admin/canvas_grader/${course.get_id()}/$taskid" class="btn btn-default btn-xs" title="Canvas Grading Tool"
+                        data-toggle="tooltip" data-placement="bottom"><i class="fa fa-graduation-cap"></i></a>
                 </div>
     		</td>
     	</tr>
